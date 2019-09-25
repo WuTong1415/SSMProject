@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wt.dao.CommentDao">
+    <insert id="insertComment" parameterType="com.wt.model.Comment">
+        insert into comment values (null,#{moodid},#{comment},#{userid},#{createtime})
+    </insert>
+    <select id="selectcommentByid" parameterType="Integer" resultType="com.wt.model.Comment">
+        select * from comment where moodid=#{id}
+    </select>
+    <delete id="deletecomment" parameterType="int">
+        delete from comment where id=#{commentid}
+    </delete>
+</mapper>
