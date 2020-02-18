@@ -5,10 +5,10 @@
     <insert id="insertComment" parameterType="com.wt.model.Comment">
         insert into comment values (null,#{moodid},#{comment},#{userid},#{createtime})
     </insert>
-    <select id="selectcommentByid" parameterType="Integer" resultType="com.wt.model.Comment">
+    <select id="selectCommentsByMoodId" parameterType="Integer" resultType="com.wt.model.Comment">
         select * from comment where moodid=#{id}
     </select>
-    <delete id="deletecomment" parameterType="int">
+    <delete id="deleteComment" parameterType="int">
         delete from comment where id=#{commentid}
     </delete>
 </mapper>

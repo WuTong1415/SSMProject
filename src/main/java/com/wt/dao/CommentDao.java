@@ -11,9 +11,22 @@ import java.util.List;
  */
 @Repository
 public interface CommentDao {
+    /**
+     * 将评论存入数据库
+     * @param comment 评论
+     */
     void insertComment(Comment comment);
 
-    List<Comment> selectcommentByid(int id);
+    /**
+     * 根据说说的ID查找评论
+     * @param id 评论ID
+     * @return 评论集合
+     */
+    List<Comment> selectCommentsByMoodId(int id);
 
-    void deletecomment(int commentid);
+    /**
+     * 删除评论
+     * @param commentId 评论ID
+     */
+    void deleteComment(int commentId);
 }

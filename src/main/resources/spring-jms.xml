@@ -38,7 +38,7 @@
         <!-- 可写多个监听器 -->
         <jms:listener destination="wt.queue.high.concurrency.praise"
                       ref="moodConsumer"/>
-        <jms:listener destination="wt.queue.high.concurrency.cancelpraise"
+        <jms:listener destination="wt.queue.high.concurrency.cancelPraise"
                       ref="moodCancelConsumer"/>
     </jms:listener-container>
     <!-- 消息消费者 end -->

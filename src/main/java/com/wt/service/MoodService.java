@@ -1,6 +1,5 @@
-package com.wt.Service.ServiceImpl;
+package com.wt.service;
 
-import com.wt.Service.MoodService;
 import com.wt.dao.CommentDao;
 import com.wt.dao.MoodDao;
 import com.wt.dao.UserDao;
@@ -25,10 +24,10 @@ import java.util.List;
 
 /**
  * @author WuTong
- * @create 2019-09-09 19:24
+ * @create 2019-09-09 19:23
  */
 @Service
-public class MoodServiceImpl implements MoodService {
+public class MoodService {
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -41,48 +40,78 @@ public class MoodServiceImpl implements MoodService {
     private RedisTemplate redisTemplate;
     @Autowired
     private MoodProducer moodProducer;
-    //MQ队列
+    /**
+     * MQ队列
+     */
     private static Destination destination = new ActiveMQQueue("wt.queue.high.concurrency.praise");
 
-    @Override
+    /**
+     * 查找所有动态
+     *
+     * @return 返回动态集合
+     */
     public List<MoodDto> findAll() {
         List<Mood> moodList = moodDao.findAll();
-        return converModel12Dto(moodList);
+        return changeModel12Dto(moodList);
     }
-    @Override
-    public Mood findmoodById(int moodid) {
 
-        return moodDao.findmoodById(moodid);
+    /**
+     * 根据动态ID查找动态
+     *
+     * @param moodId 动态ID
+     * @return 动态
+     */
+    public Mood findMoodById(int moodId) {
+        return moodDao.findMoodByMoodId(moodId);
     }
-    @Override
+
+    /**
+     * 更新动态
+     *
+     * @param mood 动态
+     */
     public void updateMood(Mood mood) {
         moodDao.updateMood(mood);
     }
 
-    @Override
-    public boolean praiseMoodForRedis(int userid,int moodid) { //点赞
-        MessageDemo messageDemo = new MessageDemo(userid,moodid);
-        moodProducer.sendMessage(destination,messageDemo); //将信息发送中activeMQ
+    /**
+     * 点赞
+     *
+     * @param userId 用户ID
+     * @param moodId 动态ID
+     * @return 可为void
+     */
+    public boolean praiseMoodForRedis(int userId, int moodId) {
+        MessageDemo messageDemo = new MessageDemo(userId, moodId);
+        //将信息发送中activeMQ
+        moodProducer.sendMessage(destination, messageDemo);
         return false;
     }
 
-    @Override
-    public void addnewmood(Mood mood) {
+    /**
+     * 添加新的动态
+     *
+     * @param mood 动态
+     */
+    public void addNewMood(Mood mood) {
         moodDao.addMood(mood);
     }
 
-
-    private List<MoodDto> converModel12Dto(List<Mood> moodList) {
-        if (CollectionUtils.isEmpty(moodList))
+    private List<MoodDto> changeModel12Dto(List<Mood> moodList) {
+        if (CollectionUtils.isEmpty(moodList)) {
             return Collections.EMPTY_LIST;
+        }
         List<MoodDto> moodDtoList = new ArrayList<>();
         for (Mood mood : moodList) {
             MoodDto moodDto = new MoodDto();
             moodDto.setId(mood.getId());
-            List<Integer> praiseuserids = userMoodPraiseRelDao.getallPraiseUserIdByMoodId(mood.getId());//获取Mysql中点赞的ID
-            praiseuserids.addAll(redisTemplate.opsForSet().members(mood.getId()));              //获取所有点赞人的ID(Redis)
-            List<String> usernames = userMoodPraiseRelDao.getallPraiseUsernameById(praiseuserids);//获取所有点赞账户名
-            List<Comment> comments = commentDao.selectcommentByid(mood.getId());
+            //获取Mysql中点赞的ID
+            List<Integer> praiseUserIds = userMoodPraiseRelDao.getAllPraiseUserIdByMoodId(mood.getId());
+            //获取所有点赞人的ID(Redis)
+            praiseUserIds.addAll(redisTemplate.opsForSet().members(mood.getId()));
+            //获取所有点赞账户名
+            List<String> userNames = userMoodPraiseRelDao.getAllPraiseUsernameById(praiseUserIds);
+            List<Comment> comments = commentDao.selectCommentsByMoodId(mood.getId());
             List<CommentDto> commentDtos = new ArrayList<>();
             for (Comment comment : comments) {
                 CommentDto commentDto = new CommentDto();
@@ -91,19 +120,20 @@ public class MoodServiceImpl implements MoodService {
                 commentDto.setCreatetime(comment.getCreatetime());
                 commentDto.setUserid(comment.getUserid());
                 commentDto.setId(comment.getId());
-                commentDto.setFriendName(userDao.find(comment.getUserid()).getAccount());
+                commentDto.setFriendName(userDao.findUserByUserId(comment.getUserid()).getAccount());
                 commentDtos.add(commentDto);
             }
 
             moodDto.setCommentList(commentDtos);
-            moodDto.setPraisenames(usernames);
+            moodDto.setPraisenames(userNames);
             moodDto.setContent(mood.getContent());
-            moodDto.setPraiseNum(usernames.size());//获取点赞数,SQL＋Redis
+            //获取点赞数,SQL＋Redis
+            moodDto.setPraiseNum(userNames.size());
             moodDto.setPublishTime(mood.getPublishTime());
             moodDto.setUserId(mood.getUserId());
             moodDtoList.add(moodDto);
             //设置用户信息
-            User user = userDao.find(mood.getUserId());
+            User user = userDao.findUserByUserId(mood.getUserId());
             moodDto.setUserName(user.getName());
             moodDto.setUserAccount(user.getAccount());
         }

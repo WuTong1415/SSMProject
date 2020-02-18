@@ -3,14 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wt.dao.UserDao">
 
-    <select id="find" resultType="com.wt.model.User" parameterType="Integer">
+    <select id="findUserByUserId" resultType="com.wt.model.User" parameterType="Integer">
         select * from User where id = #{id}
     </select>
     <select id="chooseByAccount" resultType="com.wt.model.User" parameterType="String">
         select * from User where account = #{account}
-    </select>
-    <select id="sameAccount" resultType="Integer" parameterType="String">
-        select id from user where account=#{account}
     </select>
     <insert id="register" parameterType="com.wt.model.User">
         insert into user values (null ,#{name},#{account},#{password})

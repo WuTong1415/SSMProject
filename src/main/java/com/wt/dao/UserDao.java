@@ -1,13 +1,7 @@
 package com.wt.dao;
 
-import com.wt.model.Food;
-import com.wt.model.Mood;
 import com.wt.model.User;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * @author WuTong
@@ -15,19 +9,35 @@ import java.util.List;
  */
 @Repository
 public interface UserDao {
-    /*//用配置文件
-    List<Food> findAllFood();
-    //用注解,不用配置文件
-    @Select("select * from food where fid = #{id}")
-    Food findfoodbyid(int id);
-    @Select("select * from food")
-    List<Food> findall(RowBounds rowBounds);*/
 
-    User find(int id);
+    /**
+     * 根据用户ID查找用户
+     *
+     * @param userId 用户ID
+     * @return 用户
+     */
+    User findUserByUserId(int userId);
 
+    /**
+     * 根据账户名查找用户
+     *
+     * @param account 账户名
+     * @return 用户
+     */
     User chooseByAccount(String account);
-    
+
+    /**
+     * 查看是否有相同的账户名(用于注册的账户名判断)
+     *
+     * @param account 账户名
+     * @return 账户名对应的ID
+     */
     int sameAccount(String account);
 
+    /**
+     * 将用户信息插入数据库
+     *
+     * @param user 用户
+     */
     void register(User user);
 }

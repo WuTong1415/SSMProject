@@ -1,9 +1,7 @@
 package com.wt.dto;
 
-import com.wt.model.Comment;
 import com.wt.model.Mood;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ import java.util.List;
 public class MoodDto extends Mood {
     private String userName;
     private String userAccount;
-    private List<String> praisenames;
+    private List<String> praiseNames;
     private List<CommentDto> commentList;
 
     public List<CommentDto> getCommentList() {
@@ -25,11 +23,11 @@ public class MoodDto extends Mood {
     }
 
     public List<String> getPraisenames() {
-        return praisenames;
+        return praiseNames;
     }
 
     public void setPraisenames(List<String> praisenames) {
-        this.praisenames = praisenames;
+        this.praiseNames = praisenames;
     }
 
     public String getUserName() {

@@ -1,8 +1,8 @@
 package com.wt.controller;
 
-import com.wt.Service.MoodService;
-import com.wt.Service.UserMoodPraiseRelService;
-import com.wt.Service.UserService;
+import com.wt.service.MoodService;
+import com.wt.service.UserMoodPraiseRelService;
+import com.wt.service.UserService;
 import com.wt.dto.MoodDto;
 import com.wt.model.Mood;
 import com.wt.model.User;
@@ -28,23 +28,26 @@ public class MoodController {
     private UserService userService;
     @Autowired
     private UserMoodPraiseRelService userMoodPraiseRelService;
-    @RequestMapping("cancelpraise")//取消点赞
-    public String cancelpraise (@RequestParam(value = "moodid") int moodid, @RequestParam(value = "friend") int friendid, Model model){
-        boolean b = userMoodPraiseRelService.cancelpraiseMoodForRedis(friendid, moodid);
-        User user = userService.find(friendid);
+    /**取消点赞*/
+    @RequestMapping("cancelPraise")
+    public String cancelpraise (@RequestParam(value = "moodId") int moodId, @RequestParam(value = "friend") int friendId, Model model){
+        boolean b = userMoodPraiseRelService.cancelPraiseMoodForRedis(friendId, moodId);
+        User user = userService.findUserByUserId(friendId);
         List<MoodDto> moodDtoList = moodService.findAll();
         model.addAttribute("moods",moodDtoList);
         model.addAttribute("isPraise",b);
         model.addAttribute("user", user);
         return "mood";
     }
-    @RequestMapping("writemood")//写说说,跳转至写说说页面
-    public String writemood(@RequestParam(value = "userid") int userid,Model model){
-        model.addAttribute("userid",userid);
-        return "writemood";
+    /**写说说,跳转至写说说页面*/
+    @RequestMapping("writeMood")
+    public String writeMood(@RequestParam(value = "userId") int userId,Model model){
+        model.addAttribute("userId",userId);
+        return "writeMood";
     }
-    @RequestMapping("addnewmood")//写说说
-    public String addnewmood(HttpServletRequest request,Model model){
+    /**写说说*/
+    @RequestMapping("addNewMood")
+    public String addNewMood(HttpServletRequest request,Model model){
         int id = Integer.parseInt(request.getParameter("id"));
         String content = request.getParameter("content");
         Mood mood = new Mood();
@@ -52,17 +55,18 @@ public class MoodController {
         mood.setPublishTime(new Date());
         mood.setUserId(id);
         mood.setPraiseNum(0);
-        moodService.addnewmood(mood);
-        User user = userService.find(id);
+        moodService.addNewMood(mood);
+        User user = userService.findUserByUserId(id);
         List<MoodDto> moodDtoList = moodService.findAll();
         model.addAttribute("moods",moodDtoList);
         model.addAttribute("user", user);
         return "mood";
     }
-    @RequestMapping("/praisebyRedis")
-    public String goodforRedis(@RequestParam(value = "moodid") int moodid, @RequestParam(value = "friend") int friendid, Model model) {
-        boolean b = moodService.praiseMoodForRedis(friendid, moodid);//一个说说不能被两个相同的ID点赞
-        User user = userService.find(friendid);
+    @RequestMapping("/praiseByRedis")
+    public String praiseForRedis(@RequestParam(value = "moodId") int moodId, @RequestParam(value = "friend") int friendId, Model model) {
+        //一个说说不能被两个相同的ID点赞
+        boolean b = moodService.praiseMoodForRedis(friendId, moodId);
+        User user = userService.findUserByUserId(friendId);
         List<MoodDto> moodDtoList = moodService.findAll();
         model.addAttribute("moods",moodDtoList);
         model.addAttribute("isPraise",b);

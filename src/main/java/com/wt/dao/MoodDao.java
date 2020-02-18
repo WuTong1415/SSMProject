@@ -13,11 +13,32 @@ import java.util.List;
  */
 @Repository
 public interface MoodDao {
+    /**
+     * 查找所有动态
+     *
+     * @return 返回动态集合
+     */
     List<Mood> findAll();
 
-    Mood findmoodById(int moodid);
+    /**
+     * 根据说说ID查找动态
+     *
+     * @param moodId 动态ID
+     * @return 动态
+     */
+    Mood findMoodByMoodId(int moodId);
 
+    /**
+     * 更新动态
+     *
+     * @param mood 动态
+     */
     void updateMood(Mood mood);
 
+    /**
+     * 添加新的动态
+     *
+     * @param mood 动态
+     */
     void addMood(Mood mood);
 }

@@ -5,10 +5,10 @@
     <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.wt.model.UserMoodPraiseRel">
         insert into user_mood_praise_rel (user_id,mood_id) value (#{userMoodPraiseRel.userId},#{userMoodPraiseRel.moodId})
     </insert>
-    <select id="getallPraiseUserIdByMoodId" parameterType="int" resultType="int">
+    <select id="getAllPraiseUserIdByMoodId" parameterType="int" resultType="int">
         select distinct user_id from user_mood_praise_rel where mood_id=#{id};
     </select>
-    <select id="getallPraiseUsernameById" resultType="String" parameterType="List">
+    <select id="getAllPraiseUsernameById" resultType="String" parameterType="List">
         select account from user where 1=2
          <if test="list != null and list.size() > 0">
              or id in
@@ -18,7 +18,7 @@
              </foreach>
          </if>
     </select>
-    <delete id="deletepraise" >
+    <delete id="deletePraise" >
         DELETE FROM user_mood_praise_rel WHERE user_id = #{userid} and mood_id = #{moodid};
     </delete>
 </mapper>

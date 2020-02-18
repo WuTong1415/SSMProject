@@ -4,23 +4,24 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>用户注册-心情树洞</title>
 </head>
 <body>
 <h2> 注册新账户</h2>
 <div>
-    <form method="post" action="/register">
+    <form method="post" action="${pageContext.request.contextPath}/register">
         <table>
             <tr>
                 <td>姓名：</td>
-                <td><input id="姓名" name="name" type="name"></td>
+                <td><label><input id="姓名" name="name" type="text"></label></td>
             </tr>
             <tr>
                 <td>账号：</td>
-                <td><input id="account" name="account" type="text"></td>
+                <td><label><input id="account" name="account" type="text"></label></td>
             </tr>
             <tr>
                 <td>密码：</td>
-                <td><input id="password" name="password" type="password"></td>
+                <td><label><input id="password" name="password" type="password"></label></td>
             </tr>
             <tr>
                 <td><input type="submit" value="注册"></td>

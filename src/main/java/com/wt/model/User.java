@@ -1,5 +1,8 @@
 package com.wt.model;
 
+/**
+ * @author Wutong
+ */
 public class User {
     private int id;
 

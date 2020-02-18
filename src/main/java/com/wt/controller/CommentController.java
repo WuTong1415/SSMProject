@@ -1,8 +1,8 @@
 package com.wt.controller;
 
-import com.wt.Service.CommentService;
-import com.wt.Service.MoodService;
-import com.wt.Service.UserService;
+import com.wt.service.CommentService;
+import com.wt.service.MoodService;
+import com.wt.service.UserService;
 import com.wt.dto.MoodDto;
 import com.wt.model.Comment;
 import com.wt.model.User;
@@ -29,28 +29,29 @@ public class CommentController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("addnewcomment")
-    public String addnewcomment(HttpServletRequest request, Model model) {//写评论
-        int userid = Integer.parseInt(request.getParameter("userid"));
-        int moodid = Integer.parseInt(request.getParameter("moodid"));
-        String commenttext = request.getParameter("comment");
+    @RequestMapping("addNewComment")
+    public String addNewComment(HttpServletRequest request, Model model) {//写评论
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        int moodId = Integer.parseInt(request.getParameter("moodId"));
+        String commentText = request.getParameter("comment");
         Comment comment = new Comment();
-        comment.setComment(commenttext);
+        comment.setComment(commentText);
         comment.setCreatetime(new Date());
-        comment.setMoodid(moodid);
-        comment.setUserid(userid);
+        comment.setMoodid(moodId);
+        comment.setUserid(userId);
         commentService.insertComment(comment);
-        User user = userService.find(userid);
+        User user = userService.findUserByUserId(userId);
         List<MoodDto> moodDtoList = moodService.findAll();
         model.addAttribute("moods", moodDtoList);
         model.addAttribute("user", user);
         return "mood";
     }
 
-    @RequestMapping("deletecomment")//删除评论
-    public String DeleteComment(@RequestParam(value = "commentid") int commentid, @RequestParam(value = "userid") int userid, Model model) {
-        commentService.deletecomment(commentid);
-        User user = userService.find(userid);
+    /**删除评论*/
+    @RequestMapping("deleteComment")
+    public String deleteComment(@RequestParam(value = "commentId") int commentId, @RequestParam(value = "userId") int userId, Model model) {
+        commentService.deleteComment(commentId);
+        User user = userService.findUserByUserId(userId);
         List<MoodDto> moodDtoList = moodService.findAll();
         model.addAttribute("moods", moodDtoList);
         model.addAttribute("user", user);

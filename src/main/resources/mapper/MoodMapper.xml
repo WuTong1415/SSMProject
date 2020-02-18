@@ -11,7 +11,7 @@
     <select id="findAll" resultMap="Mood">
         select * from mood
     </select>
-    <select id="findmoodById" resultMap="Mood" parameterType="Integer">
+    <select id="findMoodByMoodId" resultMap="Mood" parameterType="Integer">
         select * from mood where id=#{id}
     </select>
     <update id="updateMood" parameterType="com.wt.model.Mood">

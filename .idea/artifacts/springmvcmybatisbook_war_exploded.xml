@@ -1,10 +1,10 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="springmvc-mybatis-book:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/springmvc_mybatis_book_war_exploded</output-path>
+  <artifact type="exploded-war" name="springmvcmybatisbook:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/springmvcmybatisbook_war_exploded</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="springmvc-mybatis-book" />
+          <element id="module-output" name="springmvcmybatisbook" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.springframework:spring-core:5.0.4.RELEASE" />
@@ -49,7 +49,7 @@
           <element id="library" level="project" name="Maven: javax.jms:javax.jms-api:2.0.1" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="springmvc-mybatis-book/web/Web" />
+      <element id="javaee-facet-resources" facet="springmvcmybatisbook/web/Web" />
     </root>
   </artifact>
 </component>
