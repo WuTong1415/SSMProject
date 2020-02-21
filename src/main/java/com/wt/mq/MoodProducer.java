@@ -19,7 +19,7 @@ public class MoodProducer {
     private Logger log = Logger.getLogger(this.getClass());
     public void sendMessage(Destination destination, final MessageDemo messageDemo){
         //将点赞信息存入ActiveMQ
-        log.info("生产者---->用户id: "+messageDemo.getUserId()+"给说说id: "+messageDemo.getMoodId()+"点赞");
+        log.info("生产者---->用户id: "+messageDemo.getUserName()+"给说说id: "+messageDemo.getMoodId()+"点赞");
         jmsTemplate.convertAndSend(destination,messageDemo);
     }
 }

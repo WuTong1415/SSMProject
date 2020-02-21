@@ -11,7 +11,15 @@ public class Mood {
 
     private Date publishTime;
 
-    private Integer praiseNum;
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public int getId() {
         return id;
@@ -46,22 +54,15 @@ public class Mood {
         this.publishTime = publishTime;
     }
 
-    public Integer getPraiseNum() {
-        return praiseNum;
-    }
-
-    public void setPraiseNum(Integer praiseNum) {
-        this.praiseNum = praiseNum;
-    }
 
     @Override
     public String toString() {
         return "Mood{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", content='" + content + '\'' +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId +
                 ", publishTime=" + publishTime +
-                ", praiseNum=" + praiseNum +
+                ", img='" + img + '\'' +
                 '}';
     }
 }

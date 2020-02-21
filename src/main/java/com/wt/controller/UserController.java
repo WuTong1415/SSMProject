@@ -1,17 +1,26 @@
 package com.wt.controller;
 
+import com.wt.dto.CommentDto;
+import com.wt.dto.UserDto;
+import com.wt.model.Comment;
+import com.wt.model.Mood;
+import com.wt.service.CommentService;
 import com.wt.service.MoodService;
 import com.wt.service.UserService;
-import com.wt.dao.UserMoodPraiseRelDao;
 import com.wt.dto.MoodDto;
 import com.wt.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.jws.WebParam;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,44 +29,120 @@ import java.util.List;
  */
 @Controller
 public class UserController {
+    private static final String PRAISE_KEY = "praise:";
     @Autowired
     private UserService userService;
     @Autowired
     private MoodService moodService;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    RedisTemplate redisTemplate;
+    @RequestMapping("/")
+    public String index(){
+        return "index";
+    }
+
     /**登录*/
     @RequestMapping("/login")
-    public String login(@RequestParam(value = "account") String account, @RequestParam(value = "password") String password, Model model) {
-        System.out.println(account.equals(""));
+    public String login(HttpServletRequest request, Model model) {
+        String account = request.getParameter("account");
+        String password = request.getParameter("password");
+
         if (account.equals("") || password.equals("")) {
-            System.out.println("输入不能为空");
-            return "../../index";
+            model.addAttribute("msg","输入不能为空");
+            return "index";
         }
         User user = userService.chooseByAccount(account);
         if (user == null || !user.getPassword().equals(password)) {
-            System.out.println("账号密码错误");
-            return "../../index";
+            model.addAttribute("msg","账号密码错误");
+            return "index";
         }
-        List<MoodDto> moodDtoList = moodService.findAll();
+        return "redirect:/main"+"?id="+user.getId();
+    }
+    @RequestMapping("/reg")
+    public String reg(){
+        return "register";
+    }
+
+    /**注册*/
+    @RequestMapping("/register")
+    public String register(@ModelAttribute User user,Model model) {
+        if (user.getAccount().equals("") || user
+                .getPassword().equals("") || user.getName().equals("")) {
+            model.addAttribute("msg","输入不能为空");
+            return "register";
+        }
+        if (userService.chooseByAccount(user.getAccount()) != null) {
+            model.addAttribute("msg","该用户已经存在");
+            return "register";
+        }
+        int id = userService.register(user).getId();
+        return "redirect:/main"+"?id="+id;
+    }
+    @RequestMapping("/main")
+    public String begin(HttpServletRequest request,Model model){
+        Integer id = Integer.valueOf(request.getParameter("id"));
+        User user = userService.findUserByUserId(id);
+        List<MoodDto> moodDtoList = changeModel12Dto(moodService.findAll()) ;
         //绑定说说
         model.addAttribute("moods", moodDtoList);
         //绑定用户
         model.addAttribute("user", user);
         return "mood";
     }
-    /**注册*/
-    @RequestMapping("/register")
-    public String register(@ModelAttribute User user) {
-        if (user.getAccount().equals("") || user
-                .getPassword().equals("") || user.getName().equals("")) {
-            System.out.println("输入不能为空");
-            return "../../register";
+
+    /**
+     * 重新封装所有的动态
+     *
+     * @param moodList 动态的原始数据
+     * @return 封装好的动态展示类集合
+     */
+
+    private List<MoodDto> changeModel12Dto(List<Mood> moodList) {
+        if (CollectionUtils.isEmpty(moodList)) {
+            return Collections.EMPTY_LIST;
         }
-        if (userService.chooseByAccount(user.getAccount()) != null) {
-            System.out.println("该用户已经存在");
-            return "../../register";
+        List<MoodDto> moodDtoList = new ArrayList<>();
+        for (Mood mood : moodList) {
+            //创建新动态展示类
+            MoodDto moodDto = new MoodDto();
+
+            //获取所有点赞人的名字(Redis)
+            List<String> userNames = new ArrayList<String>(redisTemplate.opsForSet().members(PRAISE_KEY + mood.getId()));
+            //获取该动态的所有评论
+            List<Comment> comments = commentService.selectCommentsByMoodId(mood.getId());
+            //将评论重新封装
+            List<CommentDto> commentDtos = new ArrayList<>();
+            for (Comment comment : comments) {
+                CommentDto commentDto = new CommentDto();
+                commentDto.setComment(comment.getComment());
+                commentDto.setMoodid(comment.getMoodid());
+                commentDto.setCreatetime(comment.getCreatetime());
+                commentDto.setUserid(comment.getUserid());
+                commentDto.setId(comment.getId());
+                commentDto.setFriendName(userService.findUserByUserId(comment.getUserid()).getName());
+                commentDtos.add(commentDto);
+            }
+            //封装展示动态
+            if (mood.getImg()!=null){
+                moodDto.setImg(mood.getImg());
+            }
+            moodDto.setId(mood.getId());
+            moodDto.setCommentList(commentDtos);
+            moodDto.setPraiseNames(userNames);
+            moodDto.setContent(mood.getContent());
+            //点赞数
+            moodDto.setPublishTime(mood.getPublishTime());
+            moodDto.setUserId(mood.getUserId());
+
+            //设置用户信息
+            User user = userService.findUserByUserId(mood.getUserId());
+            moodDto.setUserName(user.getName());
+            moodDto.setUserAccount(user.getAccount());
+            //插入到展示动态集合
+            moodDtoList.add(moodDto);
         }
-        userService.register(user);
-        System.out.println("注册成功");
-        return "../../index";
+        return moodDtoList;
     }
 }

@@ -38,6 +38,7 @@ public interface UserDao {
      * 将用户信息插入数据库
      *
      * @param user 用户
+     * @return 账户ID
      */
-    void register(User user);
+    int register(User user);
 }

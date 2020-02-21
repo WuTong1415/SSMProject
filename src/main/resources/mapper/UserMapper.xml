@@ -10,6 +10,10 @@
         select * from User where account = #{account}
     </select>
     <insert id="register" parameterType="com.wt.model.User">
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER"
+                   resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into user values (null ,#{name},#{account},#{password})
     </insert>
 </mapper>

@@ -29,4 +29,10 @@ public interface CommentDao {
      * @param commentId 评论ID
      */
     void deleteComment(int commentId);
+
+    /**
+     * 删除动态的评论
+     * @param moodId 动态的id
+     */
+    void deleteCommentsByMoodId(int moodId);
 }

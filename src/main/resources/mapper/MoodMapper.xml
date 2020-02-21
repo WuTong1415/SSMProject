@@ -6,18 +6,35 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
-        <result column="praise_num" jdbcType="INTEGER" property="praiseNum"/>
     </resultMap>
     <select id="findAll" resultMap="Mood">
-        select * from mood
+        select *
+        from mood
+        ORDER BY publish_time DESC
     </select>
     <select id="findMoodByMoodId" resultMap="Mood" parameterType="Integer">
-        select * from mood where id=#{id}
+        select *
+        from mood
+        where id = #{id}
     </select>
     <update id="updateMood" parameterType="com.wt.model.Mood">
-        update mood set content =#{content},user_id=#{userId},publish_time=#{publishTime},praise_num=#{praiseNum} where id=#{id}
+        update mood
+        set content     =#{content},
+            user_id=#{userId},
+            publish_time=#{publishTime},
+            img=#{img}
+        where id = #{id}
     </update>
     <insert id="addMood" parameterType="com.wt.model.Mood">
-        insert into mood values (null,#{content},#{userId},#{publishTime},#{praiseNum})
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER"
+                   resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into mood values (null,#{content},#{userId},#{publishTime},#{img})
     </insert>
+    <delete id="deleteMoodById" parameterType="Integer">
+        delete
+        from mood
+        where id = #{moodId};
+    </delete>
 </mapper>

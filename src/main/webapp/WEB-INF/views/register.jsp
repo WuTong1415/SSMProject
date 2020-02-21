@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page language="java" contentType="text/html; charset=UTF-8"
         pageEncoding="UTF-8" isELIgnored="false"%>
 <!DOCTYPE HTML>
@@ -8,6 +9,9 @@
 </head>
 <body>
 <h2> 注册新账户</h2>
+<c:if test="${msg != null}">
+    <h3>${msg}</h3>
+</c:if>
 <div>
     <form method="post" action="${pageContext.request.contextPath}/register">
         <table>

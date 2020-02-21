@@ -39,6 +39,13 @@ public interface MoodDao {
      * 添加新的动态
      *
      * @param mood 动态
+     * @return 自增主键ID
      */
-    void addMood(Mood mood);
+    int addMood(Mood mood);
+
+    /**
+     * 删除动态
+     * @param moodId 动态ID
+     */
+    void deleteMoodById(int moodId);
 }

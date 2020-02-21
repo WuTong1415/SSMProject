@@ -4,6 +4,8 @@ import com.wt.dao.UserDao;
 import com.wt.dto.UserDto;
 import com.wt.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,9 +23,9 @@ public class UserService {
      * @param userId 用户ID
      * @return 用户
      */
-    public UserDto findUserByUserId(int userId) {
-        User user = userDao.findUserByUserId(userId);
-        return changeModel12Dto(user);
+    @Cacheable(value = "user",key = "'user:'+#userId")
+    public User findUserByUserId(int userId) {
+        return userDao.findUserByUserId(userId);
     }
 
     /**
@@ -32,6 +34,7 @@ public class UserService {
      * @param account 账户名
      * @return 用户
      */
+    @Cacheable(value = "user",key = "'user:'+#account")
     public User chooseByAccount(String account) {
         return userDao.chooseByAccount(account);
     }
@@ -40,16 +43,12 @@ public class UserService {
      * 将用户信息插入数据库
      *
      * @param user 用户
+     * @return 账户ID
      */
-    public void register(User user) {
+    @CachePut(value = "user",key = "'user:'+#user.id")
+    public User register(User user) {
         userDao.register(user);
+        return user ;
     }
 
-    private UserDto changeModel12Dto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setAccount(user.getAccount());
-        userDto.setName(user.getName());
-        return userDto;
-    }
 }

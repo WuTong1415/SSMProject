@@ -3,6 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wt.dao.CommentDao">
     <insert id="insertComment" parameterType="com.wt.model.Comment">
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER"
+                   resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into comment values (null,#{moodid},#{comment},#{userid},#{createtime})
     </insert>
     <select id="selectCommentsByMoodId" parameterType="Integer" resultType="com.wt.model.Comment">
@@ -10,5 +14,8 @@
     </select>
     <delete id="deleteComment" parameterType="int">
         delete from comment where id=#{commentid}
+    </delete>
+    <delete id="deleteCommentsByMoodId" parameterType="int">
+        delete from comment where moodid=#{moodid}
     </delete>
 </mapper>

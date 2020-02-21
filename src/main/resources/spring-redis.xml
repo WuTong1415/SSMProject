@@ -28,5 +28,16 @@
 
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
           p:connection-factory-ref="redisConnectionFactory" >
+        <property name="keySerializer" >
+            <bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+        </property>
     </bean>
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+
+        <constructor-arg ref="redisTemplate"/>
+    </bean>
+
 </beans>

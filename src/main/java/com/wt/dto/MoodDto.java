@@ -3,6 +3,7 @@ package com.wt.dto;
 import com.wt.model.Mood;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author WuTong
@@ -14,6 +15,14 @@ public class MoodDto extends Mood {
     private List<String> praiseNames;
     private List<CommentDto> commentList;
 
+    public List<String> getPraiseNames() {
+        return praiseNames;
+    }
+
+    public void setPraiseNames(List<String> praiseNames) {
+        this.praiseNames = praiseNames;
+    }
+
     public List<CommentDto> getCommentList() {
         return commentList;
     }
@@ -22,13 +31,6 @@ public class MoodDto extends Mood {
         this.commentList = commentList;
     }
 
-    public List<String> getPraisenames() {
-        return praiseNames;
-    }
-
-    public void setPraisenames(List<String> praisenames) {
-        this.praiseNames = praisenames;
-    }
 
     public String getUserName() {
         return userName;
