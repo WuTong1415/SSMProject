@@ -7,10 +7,20 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
     </resultMap>
-    <select id="findAll" resultMap="Mood">
-        select *
+    <select id="findAll" resultMap="Mood" parameterType="List">
+        /*select *
         from mood
-        ORDER BY publish_time DESC
+        ORDER BY publish_time DESC*/
+
+        select * from mood where 1=2
+        <if test="list != null and list.size() > 0">
+            or user_id in
+            <foreach collection="list" index="index" item="item" open="("
+                     separator="," close=")">
+                #{item}
+            </foreach>
+            ORDER BY publish_time DESC
+        </if>
     </select>
     <select id="findMoodByMoodId" resultMap="Mood" parameterType="Integer">
         select *
@@ -37,4 +47,9 @@
         from mood
         where id = #{moodId};
     </delete>
+    <select id="findMoodByUserId" resultMap="Mood" parameterType="Integer">
+        select *
+        from mood
+        where user_id = #{user_id}
+    </select>
 </mapper>

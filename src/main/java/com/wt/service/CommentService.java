@@ -49,8 +49,8 @@ public class CommentService {
      *
      * @param commentId 评论ID
      */
-    @CacheEvict(value = "comment",key = "'comment:'+#commentId")
-    public void deleteComment(int commentId) {
+    @CacheEvict(value = "comment",key = "'comment:'+#moodId")
+    public void deleteComment(int commentId,int moodId) {
         commentDao.deleteComment(commentId);
     }
 
@@ -62,6 +62,5 @@ public class CommentService {
     public void deleteCommentsByMoodId(int moodId) {
         commentDao.deleteCommentsByMoodId(moodId);
     }
-
 
 }

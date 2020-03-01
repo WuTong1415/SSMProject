@@ -12,16 +12,10 @@
 <div STYLE="margin-left: 35%;width: 500px" >
     <h1>
         ${user.name}欢迎您&nbsp&nbsp&nbsp
-        <a href="${pageContext.request.contextPath}/logout">
-            <input type="button" value="退出登录">
+        <a href="${pageContext.request.contextPath}/friends?userId=${user.id}">
+            <input type="button" value="返回">
         </a>
     </h1><br>
-    <a id="writeMood" href="${pageContext.request.contextPath}/writeNewMood?userId=${user.id}">
-        <input type="button" value="发布动态">
-    </a>
-    <a style="margin-left: 70px" id="friends" href="${pageContext.request.contextPath}/friends?userId=${user.id}">
-        <input type="button" value="我的好友">
-    </a>
     <div id="moods">
         <b>动态列表:</b><br>
         <%--迭代动态--%>
@@ -29,15 +23,10 @@
             <div style="height: 15px;width: 500px;float: left">
                 -------------------------------------------
             </div>
-            <div style="width: 500px;height: auto;float: left">
+            <div style="width: 500px;height: auto">
 
                 <br>
                 <b>用户：</b><span id="account">${mood.userName}</span>
-                <c:if test="${mood.userName eq user.name}">
-                    <a style="margin-left: 270px"
-                       href="${pageContext.request.contextPath}/deleteMood?moodId=${mood.id}&userId=${user.id}">
-                        <input type="button" value="删除动态"></a>
-                </c:if>
 
                 <br>
                 <div><b>动态内容：</b><span id="content">${mood.content}</span><br></div>
@@ -63,14 +52,14 @@
                     </c:forEach>
                     <c:if test="${iscontain}">
                         <a id="cancelPraise"
-                           href="${pageContext.request.contextPath}/cancelPraise?moodId=${mood.id}&userId=${user.id}&state=m">
+                           href="${pageContext.request.contextPath}/cancelPraise?moodId=${mood.id}&userId=${user.id}&state=f">
                             <input type="button" value="取消赞">
 
                         </a>
                     </c:if>
                     <c:if test="${!iscontain}">
                         <a id="praiseForRedis"
-                           href="${pageContext.request.contextPath}/praiseByRedis?moodId=${mood.id}&userId=${user.id}&state=m">
+                           href="${pageContext.request.contextPath}/praiseByRedis?moodId=${mood.id}&userId=${user.id}&state=f">
                             <input type="button" value="赞">
                         </a>
                     </c:if>
@@ -89,7 +78,7 @@
                         <c:if test="${comment.friendName eq user.name}">
 
                             <a style="float: right"
-                               href="${pageContext.request.contextPath}/deleteComment?friendId=${mood.userId}&moodId=${mood.id}&commentId=${comment.id}&userId=${user.id}&state=m">
+                               href="${pageContext.request.contextPath}/deleteComment?friendId=${mood.userId}&moodId=${mood.id}&commentId=${comment.id}&userId=${user.id}&state=f">
                                 <input type="button" value="删除评论">
                             </a>
                         </c:if>
@@ -98,15 +87,11 @@
                     </c:forEach>
                 </div><br>
                 <div id="test${idxStatus.index}" style="display:none">
-                    <form method="get" action="${pageContext.request.contextPath}/addNewComment?">
+                    <form method="get" action="${pageContext.request.contextPath}/addNewComment?state=f">
                         <table>
                             <tr>
                                 <td style="display: none"><label><input id="userId" name="userId"
                                                                         value="${user.id}"></label></td>
-                            </tr>
-                            <tr>
-                                <td style="display: none"><label><input id="state" name="state"
-                                                                        value="m"></label></td>
                             </tr>
                             <tr>
                                 <td style="display: none"><label><input id="moodId" name="moodId"

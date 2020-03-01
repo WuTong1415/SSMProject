@@ -35,8 +35,7 @@ public class MoodService {
     UserService userService;
     @Autowired
     CommentService commentService;
-    @Autowired
-    private RedisTemplate redisTemplate;
+
     @Autowired
     private MoodProducer moodProducer;
 
@@ -47,15 +46,15 @@ public class MoodService {
     private static Destination destination2 = new ActiveMQQueue("wt.queue.high.concurrency.cancelPraise");
 
     /**
-     * 查找原始动态集合
+     * 查找原始好友动态集合
      *
+     * @param friends 好友ID集合
      * @return 返回原始动态集合
      */
-    @Cacheable(value = "mood",key = "'mood:'+'All'")
-    public List<Mood> findAll() {
-        return moodDao.findAll();
+//    @Cacheable(value = "mood",key = "'mood:'+'All'")
+    public List<Mood> findAll(List<Integer> friends) {
+        return moodDao.findAll(friends);
     }
-
 
 
     /**
@@ -102,11 +101,11 @@ public class MoodService {
      * @param mood 动态
      */
     @Caching(
-            put ={
+            put = {
                     @CachePut(value = "mood", key = "'mood:'+#mood.id")
             },
-            evict ={
-                    @CacheEvict(value = "mood",key = "'mood:'+'All'")
+            evict = {
+                    @CacheEvict(value = "mood", key = "'mood:'+'All'")
             }
     )
     public Mood addNewMood(Mood mood) {
@@ -115,14 +114,17 @@ public class MoodService {
     }
 
 
-
     @Caching(
-            evict ={
-                    @CacheEvict(value = "mood",key = "'mood:'+'All'"),
+            evict = {
+                    @CacheEvict(value = "mood", key = "'mood:'+'All'"),
                     @CacheEvict(value = "mood", key = "'mood:'+#moodId")
             }
     )
     public void deleteMoodById(int moodId) {
         moodDao.deleteMoodById(moodId);
+    }
+
+    public List<Mood> findMoodByUserId(Integer friendId) {
+        return moodDao.findMoodByUserId(friendId);
     }
 }

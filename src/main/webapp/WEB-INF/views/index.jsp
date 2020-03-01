@@ -25,7 +25,7 @@
                 <td><label><input id="password" name="password" type="password"></label></td>
             </tr>
             <tr>
-                <td><input type="submit" value="登录"></td>
+                    <td><input type="submit" value="登录"></td>
             </tr>
         </table>
     </form>

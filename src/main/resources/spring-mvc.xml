@@ -22,6 +22,20 @@
     <mvc:annotation-driven/>
     <!--放行静态资源-->
     <mvc:default-servlet-handler/>
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/reg"/>
+            <mvc:exclude-mapping path="/register"/>
+            <mvc:exclude-mapping path="/logout"/>
+            <mvc:exclude-mapping path="/static/**/**"/>
+            <bean class="com.wt.interceptor.Interceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
     <!--配置JSP　显示ViewResolver(视图解析器)-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

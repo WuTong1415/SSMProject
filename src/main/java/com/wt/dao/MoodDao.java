@@ -14,11 +14,11 @@ import java.util.List;
 @Repository
 public interface MoodDao {
     /**
-     * 查找所有动态
-     *
+     * 查找所有好友动态
+     * @param friends 好友ID集合
      * @return 返回动态集合
      */
-    List<Mood> findAll();
+    List<Mood> findAll(List<Integer> friends);
 
     /**
      * 根据说说ID查找动态
@@ -48,4 +48,11 @@ public interface MoodDao {
      * @param moodId 动态ID
      */
     void deleteMoodById(int moodId);
+
+    /**
+     * 查找好友的动态
+     * @param friendId 好友ID
+     * @return 好友动态列表
+     */
+    List<Mood> findMoodByUserId(Integer friendId);
 }

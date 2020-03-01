@@ -3,6 +3,8 @@ package com.wt.dao;
 import com.wt.model.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author WuTong
  * @create 2019-09-07 10:17
@@ -41,4 +43,5 @@ public interface UserDao {
      * @return 账户ID
      */
     int register(User user);
+
 }
