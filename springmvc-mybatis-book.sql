@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 20/02/2020 17:02:07
+ Date: 03/03/2020 16:13:35
 */
 
 SET NAMES utf8mb4;
@@ -28,13 +28,7 @@ CREATE TABLE `comment`  (
   `userid` int(0) NOT NULL COMMENT '写评论的用户',
   `createtime` datetime(0) NOT NULL COMMENT '评论的时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of comment
--- ----------------------------
-INSERT INTO `comment` VALUES (42, 25, '这也太强了8', 1, '2020-02-20 16:53:54');
-INSERT INTO `comment` VALUES (43, 24, '真有你的', 2, '2020-02-20 16:54:03');
+) ENGINE = InnoDB AUTO_INCREMENT = 56 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for mood
@@ -47,13 +41,7 @@ CREATE TABLE `mood`  (
   `publish_time` timestamp(0) NOT NULL COMMENT '发表时间',
   `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of mood
--- ----------------------------
-INSERT INTO `mood` VALUES (24, '我真是日了gou了', 1, '2020-02-20 16:52:53', '2020/02/201582188773318QQ截图20190226132641.png');
-INSERT INTO `mood` VALUES (25, '牛的', 2, '2020-02-20 16:53:31', '2020/02/201582188810674QQ截图20191212224105.png');
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user
@@ -64,15 +52,8 @@ CREATE TABLE `user`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名字(昵称)',
   `account` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户账户',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户密码',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `index_id`(`id`) USING BTREE COMMENT 'id索引'
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of user
--- ----------------------------
-INSERT INTO `user` VALUES (1, '小壹', 'user1', '123');
-INSERT INTO `user` VALUES (2, '小贰', 'user2', '123');
-INSERT INTO `user` VALUES (3, '小叁', 'user3', '123');
-INSERT INTO `user` VALUES (5, '小肆', 'user4', '123');
 
 SET FOREIGN_KEY_CHECKS = 1;
